@@ -1,5 +1,13 @@
+import psycopg
+
 class Database:
     def __init__(self):
+        self.conn
+        self.cursor
+
+    def connect(self, name, user, password, host='127.0.0.1', port='5433'):
+        self.conn = psycopg.connect(f"dbname={name} user={user}")
+        self.cursor = self.conn.cursor()
         pass
 
     def create_table_users(self):
