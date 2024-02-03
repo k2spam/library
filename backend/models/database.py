@@ -9,6 +9,10 @@ class Database:
         self.conn = psycopg.connect(f"dbname={dbname} user={user} password={pwd} host={host} port={port}")
         self.cursor = self.conn.cursor()
 
+    def close(self):
+        self.cursor.close()
+        self.conn.close()
+
     def create_table_users(self):
         self.cursor.execute('''CREATE TABLE IF NOT EXISTS users
                             (id SERIAL PRIMARY KEY,
@@ -17,13 +21,16 @@ class Database:
                             email TEXT,
                             password TEXT,
                             birthday TIMESTAMP)''')
+        self.conn.commit()
 
     def create_table_books(self):
         self.cursor.execute('''CREATE TABLE IF NOT EXISTS books
                             (id SERIAL PRIMARY KEY,
                             title TEXT,
                             author TEXT,
-                            cover TEXT)''')
+                            cover TEXT,
+                            year INTEGER)''')
+        self.conn.commit()
 
     def create_table_rental(self):
         self.cursor.execute('''CREATE TABLE IF NOT EXISTS rental
@@ -31,6 +38,7 @@ class Database:
                             bid INTEGER,
                             uid INTEGER,
                             rent_date TIMESTAMP)''')
+        self.conn.commit()
 
     def get_users(self):
         pass
@@ -53,9 +61,10 @@ class Database:
     def get_book(self, bid):
         pass
 
-    def add_book(self, values):
-        books = ",".join([f'({book[0]}, {book[1]}, {book[2]})' for book in values])
-        self.cursor.execute(f'INSERT INTO books (title, author, cover) VALUES {books}')
+    def add_books(self, values):
+        books = ",".join([f'(\"{book[0]}\", \"{book[1]}\", \"{book[2]}\", {book[3]})' for book in values])
+        self.cursor.execute(f'INSERT INTO books (title, author, cover, year) VALUES {books}')
+        self.conn.commit()
 
     def update_book(self, book):
         pass
