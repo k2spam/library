@@ -11,6 +11,5 @@ db_pwd = os.environ.get('DB_PWD')
 db = Database()
 db.connect(dbname=db_name, user=db_user, pwd=db_pwd, host=db_host, port=db_port)
 
-db.create_table_books()
-db.create_table_users()
-db.create_table_rental()
+books = db.get_books()
+print(books)

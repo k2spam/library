@@ -27,6 +27,7 @@ class Database:
         self.cursor.execute('''CREATE TABLE IF NOT EXISTS books
                             (id SERIAL PRIMARY KEY,
                             title TEXT,
+                            description TEXT,
                             author TEXT,
                             cover TEXT,
                             year INTEGER)''')
@@ -55,15 +56,17 @@ class Database:
     def delete_user(self, uid):
         pass
 
-    def get_books(self):
-        pass
-
+    def get_books(self, start=0, limit=20):
+        self.cursor.execute('SELECT * FROM books LIMIT %s OFFSET %s', (limit, start))
+        return self.cursor.fetchall()
+        
     def get_book(self, bid):
+        self.cursor.execute('SELECT * FROM books WHERE id=%s', (bid))
         pass
 
     def add_books(self, values):
-        books = ",".join([f'(\"{book[0]}\", \"{book[1]}\", \"{book[2]}\", {book[3]})' for book in values])
-        self.cursor.execute(f'INSERT INTO books (title, author, cover, year) VALUES {books}')
+        self.cursor.executemany('''INSERT INTO books (title, author, cover, description, year) 
+                                VALUES (%s, %s, %s, %s, %s)''', values)
         self.conn.commit()
 
     def update_book(self, book):
