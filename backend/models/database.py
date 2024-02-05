@@ -62,7 +62,7 @@ class Database:
         
     def get_book(self, bid):
         self.cursor.execute('SELECT * FROM books WHERE id=%s', (bid))
-        pass
+        return self.cursor.fetchone()
 
     def add_books(self, values):
         self.cursor.executemany('''INSERT INTO books (title, author, cover, description, year) 
@@ -73,7 +73,8 @@ class Database:
         pass
     
     def delete_book(self, bid):
-        pass
+        self.cursor.execute('DELETE FROM books WHERE id=%s', (bid))
+        self.conn.commit()
 
     def get_rentals(self):
         pass
