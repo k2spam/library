@@ -57,6 +57,8 @@ class Database:
         pass
 
     def get_books(self, start=0, limit=20):
+        start = 0 if start == None else start
+        limit = 20 if limit == None else limit
         self.cursor.execute('SELECT * FROM books LIMIT %s OFFSET %s', (limit, start))
         return self.cursor.fetchall()
         

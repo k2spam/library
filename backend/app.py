@@ -1,6 +1,6 @@
 import os
 import env
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 
 from models.database import Database
 
@@ -26,7 +26,10 @@ def get_user(user_id):
 
 @app.route('/api/books', methods=['GET'])
 def get_books():
-    books = db.get_books()
+    start = request.args.get('start')
+    limit = request.args.get('limit')
+    print(start, limit)
+    books = db.get_books(start=start, limit=limit)
     return jsonify(books)
 
 if __name__ == '__main__':
